@@ -17,6 +17,10 @@ export default function Home() {
       })
   }, []);
 
+  const measureNow = () => {
+    debugger;
+  };
+
   return (
     <>
       <Head>
@@ -27,13 +31,64 @@ export default function Home() {
       </Head>
       <main>
         <p className='text-lg'>Raspberry Pi Home Lab</p>
-        {!isLoading && sensorsData && sensorsData.length > 0 && sensorsData.map((item) => {
-          return <div key={item.id}>
-            <p className="text-3xl">Temperature: {item.temperature}</p>
-            <p>Humidity: {item.humidity}</p>
-            <p>Measured: {new Date(item.measure_date).toLocaleString()}</p>
+
+        <section className="antialiased bg-gray-100 text-gray-600 h-screen px-4">
+          <div className="flex flex-col justify-center h-full">
+
+            <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+              <header className="px-5 py-4 border-b border-gray-100">
+                <div className="font-semibold text-gray-800">Recent Readings</div>
+              </header>
+
+              <div className="overflow-x-auto p-3">
+                <table className="table-auto w-full">
+                  <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                    <tr>
+                      <th className="p-2">
+                        <div className="font-semibold text-left">Temperature</div>
+                      </th>
+                      <th className="p-2">
+                        <div className="font-semibold text-left">Humidity</div>
+                      </th>
+                      <th className="p-2">
+                        <div className="font-semibold text-left">Measure Date</div>
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="text-sm divide-y divide-gray-100">
+
+                    {!isLoading && sensorsData && sensorsData.length > 0 && sensorsData.map((item) => {
+                      return <tr key={item.id}>
+                        <td className='p-2'>
+                          <div className="text-left font-medium text-gray-800">
+                            {item.temperature}
+                          </div>
+                        </td>
+                        <td className='p-2'>
+                          <div className="text-left font-medium text-gray-800">
+                            {item.humidity}
+                          </div>
+                        </td>
+                        <td className='p-2'>
+                          <div className="text-left font-medium text-gray-800">
+                            {new Date(item.measure_date).toLocaleString()}
+                          </div>
+                        </td>
+                      </tr>
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex justify-end font-bold space-x-4 text-2xl border-t border-gray-100 px-5 py-4">
+                <button className='px-4 py-1 rounded-lg bg-slate-300 text-gray-800' onClick={measureNow}>Measure now</button>
+                <div>Total</div>
+                <div className="text-blue-600">{sensorsData && sensorsData.length} readings</div>
+              </div>
+            </div>
           </div>
-        })}
+        </section>
       </main>
     </>
   )
