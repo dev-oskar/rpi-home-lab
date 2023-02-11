@@ -20,8 +20,8 @@ export default async function handler(req, res) {
       if (err) throw err;
       client.query(query, (err, qRes) => {
         done();
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Cache-Control', 'max-age=180000');
+        // res.setHeader('Content-Type', 'application/json');
+        // res.setHeader('Cache-Control', 'max-age=180000');
         if (err) {
           console.log(err.stack);
           res.status(500);
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         } else {
           if (qRes.rows.length > 0) {
             res.status(200);
-            res.json(qRes.rows)
+            res.json(qRes.rows);
           } else {
             res.status(404);
             res.json({});
