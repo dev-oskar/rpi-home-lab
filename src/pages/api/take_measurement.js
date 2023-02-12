@@ -46,7 +46,6 @@ export default async function handler(req, res) {
     const now = new Date();
 
     const query = `INSERT INTO sensors (TEMPERATURE, HUMIDITY, MEASURE_DATE) VALUES ($1, $2, $3) RETURNING *;`;
-    // const query = `INSERT INTO sensors (TEMPERATURE, HUMIDITY, MEASURE_DATE) VALUES (${readings.temperature}, ${readings.humidity}, ${now}) RETURNING *;`;
     const query_response = await db.query(query, [readings.temperature, readings.humidity, now]);
 
     if (query_response) {

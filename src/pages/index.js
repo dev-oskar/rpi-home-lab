@@ -1,10 +1,15 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
   const [sensorsData, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
+
+  // const loadData = async function (){
+  //   fetch('/api/get_stored_data')
+  // }
 
   useEffect(() => {
     setLoading(true);
@@ -12,13 +17,20 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setData(data);
+        setData(data.rows);
         setLoading(false);
       })
   }, []);
 
   const measureNow = () => {
     debugger;
+    fetch('/api/take_measurement')
+      .then((res) => res.json())
+      .then((data) => {
+        const router = useRouter();
+        //this will reload the page without doing SSR
+        router.refresh();
+      })
   };
 
   return (
@@ -57,7 +69,9 @@ export default function Home() {
                   </thead>
 
                   <tbody className="text-sm divide-y divide-gray-100">
-
+                    {isLoading && <p>
+                      Loading...
+                    </p>}
                     {!isLoading && sensorsData && sensorsData.length > 0 && sensorsData.map((item) => {
                       return <tr key={item.id}>
                         <td className='p-2'>
