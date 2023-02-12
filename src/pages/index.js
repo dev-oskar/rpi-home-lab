@@ -4,32 +4,32 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
 
-  const [sensorsData, setData] = useState(null)
-  const [isLoading, setLoading] = useState(false)
+  const [sensorsData, setData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
 
-  // const loadData = async function (){
-  //   fetch('/api/get_stored_data')
-  // }
-
-  useEffect(() => {
+  // Call this function whenever you want to
+  // refresh props!
+  const refreshData = () => {
+    // router.replace('/');
     setLoading(true);
     fetch('/api/get_stored_data')
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setData(data.rows);
         setLoading(false);
       })
+  }
+
+  useEffect(() => {
+    refreshData()
   }, []);
 
+
   const measureNow = () => {
-    debugger;
     fetch('/api/take_measurement')
-      .then((res) => res.json())
-      .then((data) => {
-        const router = useRouter();
-        //this will reload the page without doing SSR
-        router.refresh();
+      .then(() => {
+        refreshData();
       })
   };
 
@@ -42,8 +42,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <p className='text-lg'>Raspberry Pi Home Lab</p>
-
+        <div className='flex justify-between h-full'>
+          <p className='text-lg'>Raspberry Pi Home Lab</p>
+          <p className='text-lg'>Camera Online</p>
+          <p className='text-lg'>Readings</p>
+          <p className='text-lg'>Settings</p>
+        </div>
         <section className="antialiased bg-gray-100 text-gray-600 h-screen px-4">
           <div className="flex flex-col justify-center h-full">
 
@@ -69,9 +73,9 @@ export default function Home() {
                   </thead>
 
                   <tbody className="text-sm divide-y divide-gray-100">
-                    {isLoading && <p>
+                    {isLoading && <tr><td>
                       Loading...
-                    </p>}
+                    </td></tr>}
                     {!isLoading && sensorsData && sensorsData.length > 0 && sensorsData.map((item) => {
                       return <tr key={item.id}>
                         <td className='p-2'>
@@ -95,10 +99,12 @@ export default function Home() {
                 </table>
               </div>
 
-              <div className="flex justify-end font-bold space-x-4 text-2xl border-t border-gray-100 px-5 py-4">
+              <div className="flex justify-between font-bold space-x-4 text-2xl border-t border-gray-100 px-5 py-4">
                 <button className='px-4 py-1 rounded-lg bg-slate-300 text-gray-800' onClick={measureNow}>Measure now</button>
-                <div>Total</div>
-                <div className="text-blue-600">{sensorsData && sensorsData.length} readings</div>
+                <div>
+                  <p>Total</p>
+                  <p className="text-blue-600">{sensorsData && sensorsData.length} readings</p>
+                </div>
               </div>
             </div>
           </div>

@@ -16,11 +16,6 @@ pool.on('error', (err, client) => {
 async function getReadings() {
   try {
     const res = await sensor.read(11, 4);
-    console.log(
-      `log from getReadings() ` +
-      `temp: ${res.temperature.toFixed(1)}°C, ` +
-      `humidity: ${res.humidity.toFixed(1)}%`
-    );
 
     if (res.humidity && res.temperature) {
       return {
@@ -49,7 +44,6 @@ export default async function handler(req, res) {
     const query_response = await db.query(query, [readings.temperature, readings.humidity, now]);
 
     if (query_response) {
-      console.log(query_response);
       res.status(200);
       res.json(query_response);
     } else {
